@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Biblioteca</title>
+    <!-- Fonte Google Inter & Playfair Display para elegância de biblioteca -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Overlay Mobile (Para fechar a sidebar ao clicar fora) -->
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="fecharSidebarMobile()"></div>
+
+    <!-- BOTÃO HAMBÚRGUER (MOBILE) -->
+    <button class="mobile-menu-btn" onclick="abrirSidebarMobile()" aria-label="Abrir Menu">
+        <span>☰</span>
+    </button>
+
+    <!-- NAVEGAÇÃO LATERAL (SIDEBAR) -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon">📚</span>
+            <div>
+                <h2>BiblioTech</h2>
+                <small>Gestão Acadêmica</small>
+            </div>
+            <button class="close-mobile-btn" onclick="fecharSidebarMobile()">✕</button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <button id="nav-inicio" class="nav-btn active" onclick="mostrarSecao('inicio')">
+                <span class="icon">🏛️</span>
+                <span>Início</span>
+            </button>
+
+            <button id="nav-livros" class="nav-btn" onclick="mostrarSecao('livros')">
+                <span class="icon">📖</span>
+                <span>Livros</span>
+            </button>
+
+            <button id="nav-usuarios" class="nav-btn" onclick="mostrarSecao('usuarios')">
+                <span class="icon">👤</span>
+                <span>Usuários</span>
+            </button>
+
+            <button id="nav-emprestimos" class="nav-btn" onclick="mostrarSecao('emprestimos')">
+                <span class="icon">🔄</span>
+                <span>Empréstimos</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <p>Sistema de Biblioteca</p>
+            <small>Conectado ao Supabase</small>
+        </div>
+    </aside>
+
+    <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+    <div class="main-wrapper">
+        <header class="top-header">
+            <h1 id="pageTitle">Boas-vindas à Biblioteca</h1>
+            <span class="header-subtitle">Gestão de acervo e empréstimos</span>
+        </header>
+
+        <main class="content">
+
+            <!-- ================= TELA INICIAL ================= -->
+            <section id="inicio" class="secao-content fade-in">
+                <div class="welcome-banner">
+                    <div class="welcome-text">
+                        <h2>Bem-vindo ao Sistema de Biblioteca 📜</h2>
+                        <p>Navegue entre o acervo de livros, cadastro de leitor e controle de empréstimos ativos com praticidade e organização.</p>
+                    </div>
+                </div>
+
+                <div class="cards-atalhos-grid">
+                    <div class="card-atalho" onclick="mostrarSecao('livros')">
+                        <div class="atalho-icon">📚</div>
+                        <div class="atalho-info">
+                            <h3>Gestão de Livros</h3>
+                            <p>Cadastre novas obras no acervo ou consulte os livros registrados.</p>
+                        </div>
+                        <span class="atalho-arrow">➔</span>
+                    </div>
+
+                    <div class="card-atalho" onclick="mostrarSecao('usuarios')">
+                        <div class="atalho-icon">👤</div>
+                        <div class="atalho-info">
+                            <h3>Leitores & Usuários</h3>
+                            <p>Gerencie o cadastro de leitores autorizados no sistema.</p>
+                        </div>
+                        <span class="atalho-arrow">➔</span>
+                    </div>
+
+                    <div class="card-atalho" onclick="mostrarSecao('emprestimos')">
+                        <div class="atalho-icon">🔄</div>
+                        <div class="atalho-info">
+                            <h3>Empréstimos</h3>
+                            <p>Registre retiradas de livros e faça a baixa de devoluções.</p>
+                        </div>
+                        <span class="atalho-arrow">➔</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= SEÇÃO DE LIVROS ================= -->
+            <section id="livros" class="secao-content fade-in" style="display: none;">
+                <div class="form-container">
+                    <h2>📖 Cadastrar Novo Livro</h2>
+                    <form id="formLivro">
+                        <div class="form-grid">
+                            <div class="campo">
+                                <label for="titulo">Título do Livro *</label>
+                                <input type="text" id="titulo" placeholder="Ex.: Dom Casmurro" required>
+                            </div>
+
+                            <div class="campo">
+                                <label for="autor">Autor *</label>
+                                <input type="text" id="autor" placeholder="Ex.: Machado de Assis" required>
+                            </div>
+
+                            <div class="campo">
+                                <label for="ano">Ano de Publicação</label>
+                                <input type="number" id="ano" placeholder="Ex.: 1899" min="0">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-principal">
+                                <span>➕</span> Cadastrar Livro
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="lista-container">
+                    <h3>Acervo de Livros</h3>
+                    <div id="listaLivros" class="cards-grid">
+                        <p class="mensagem">Carregando livros...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= SEÇÃO DE USUÁRIOS ================= -->
+            <section id="usuarios" class="secao-content fade-in" style="display: none;">
+                <div class="form-container">
+                    <h2>👤 Cadastrar Novo Usuário</h2>
+                    <form id="formUsuario">
+                        <div class="form-grid">
+                            <div class="campo">
+                                <label for="nome">Nome Completo *</label>
+                                <input type="text" id="nome" placeholder="Ex.: Ana Silva" required>
+                            </div>
+
+                            <div class="campo">
+                                <label for="email">E-mail de Contato</label>
+                                <input type="email" id="email" placeholder="Ex.: ana@email.com">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-principal">
+                                <span>➕</span> Cadastrar Usuário
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="lista-container">
+                    <h3>Usuários Cadastrados</h3>
+                    <div id="listaUsuarios" class="cards-grid">
+                        <p class="mensagem">Carregando usuários...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= SEÇÃO DE EMPRÉSTIMOS ================= -->
+            <section id="emprestimos" class="secao-content fade-in" style="display: none;">
+                <div class="form-container">
+                    <h2>🔄 Registrar Empréstimo</h2>
+                    <form id="formEmprestimo">
+                        <div class="form-grid">
+                            <div class="campo">
+                                <label for="livroEmprestimo">Livro *</label>
+                                <select id="livroEmprestimo" required>
+                                    <option value="">Selecione um livro...</option>
+                                </select>
+                            </div>
+
+                            <div class="campo">
+                                <label for="usuarioEmprestimo">Usuário / Leitor *</label>
+                                <select id="usuarioEmprestimo" required>
+                                    <option value="">Selecione um usuário...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-principal">
+                                <span>📋</span> Confirmar Empréstimo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="lista-container">
+                    <h3>Histórico e Status de Empréstimos</h3>
+                    <div id="listaEmprestimos" class="cards-grid">
+                        <p class="mensagem">Carregando empréstimos...</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="footer">
+            <p>Sistema de Biblioteca — Conexão Supabase Real</p>
+        </footer>
+    </div>
+
+    <!-- SUPABASE SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- SCRIPT DA APLICAÇÃO -->
+    <script src="app.js"></script>
+</body>
+</html>
